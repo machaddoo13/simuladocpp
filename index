@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado de Direito Penal e Processual Penal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos gerais para garantir que a página ocupe a largura total e se adapte */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center; /* Centraliza o conteúdo horizontalmente */
+            align-items: flex-start; /* Alinha o conteúdo ao topo verticalmente */
+            min-height: 100vh; /* Garante que o corpo ocupe a altura total da viewport */
+            padding: 20px; /* Padding nas bordas para respiro em telas pequenas */
+            box-sizing: border-box; /* Inclui padding e borda no cálculo total da largura/altura */
+        }
+        /* Container principal do simulado, com largura fluida e máxima definida */
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Ocupa 100% da largura disponível */
+            max-width: 800px; /* Mas não ultrapassa 800px em telas grandes */
+            margin-top: 20px;
+        }
+        /* Estilo do título do simulado */
+        .quiz-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+        /* Estilo para o nome do professor */
+        .professor-name {
+            font-size: 0.9rem; /* Letra menor para o nome do professor */
+            color: #555;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        /* Cabeçalho da questão, com a indicação do número da questão */
+        .question-header {
+            display: flex;
+            justify-content: center; /* Centralizar a indicação da questão */
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        /* Texto da questão */
+        .question-text {
+            font-size: 1.15rem; /* Tamanho de fonte responsivo */
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #333;
+        }
+        /* Estilo das opções de resposta (labels para os inputs de rádio) */
+        .options-list label {
+            display: block;
+            background-color: #f9f9f9;
+            padding: 15px; /* Padding generoso para facilitar o toque em telas sensíveis */
+            margin-bottom: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+            font-size: 1rem; /* Tamanho de fonte responsivo */
+            color: #555;
+        }
+        .options-list label:hover {
+            background-color: #eef2ff;
+            border-color: #a7b7ed;
+        }
+        .options-list input[type="radio"]:checked + span {
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        .options-list input[type="radio"] {
+            margin-right: 12px;
+        }
+        /* Botões de navegação */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between; /* Espaçamento entre os botões */
+            margin-top: 30px;
+            /* Em telas menores, os botões se adaptarão à largura disponível */
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha se não houver espaço */
+            gap: 15px; /* Espaçamento entre os botões quando eles quebram a linha */
+        }
+        .nav-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1; /* Permite que os botões cresçam para ocupar o espaço disponível */
+            min-width: 140px; /* Garante um tamanho mínimo para o botão */
+        }
+        .nav-button.primary {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .nav-button.primary:hover {
+            background-color: #4338ca;
+            transform: translateY(-1px);
+        }
+        .nav-button.secondary {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+        .nav-button.secondary:hover {
+            background-color: #c7d2fe;
+            transform: translateY(-1px);
+        }
+        /* Feedback de resposta (correto/incorreto) */
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .feedback.correct {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .feedback.incorrect {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        /* Tela de resultado final */
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .result-screen h2 {
+            font-size: 2rem;
+            color: #4f46e5;
+            margin-bottom: 15px;
+        }
+        .result-screen p {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .result-screen button {
+            background-color: #22c55e;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .result-screen button:hover {
+            background-color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho do Simulador -->
+        <h1 class="quiz-title">Simulado de Direito Penal e Processual Penal</h1>
+        <p class="professor-name">Professor Marcelo Trindade</p>
+
+        <div id="quiz-container">
+            <div class="question-header">
+                <span id="question-indicator" class="text-lg font-semibold text-gray-700">Questão 1 de 70</span>
+            </div>
+            <div class="question-text" id="question-text"></div>
+            <form id="options-form" class="options-list">
+                </form>
+            <div id="feedback" class="feedback hidden"></div>
+            <div class="navigation-buttons">
+                <button id="prev-button" class="nav-button secondary" disabled>Anterior</button>
+                <button id="next-button" class="nav-button primary">Próxima</button>
+            </div>
+        </div>
+        <div id="result-screen" class="result-screen hidden">
+            <h2>Simulado Concluído!</h2>
+            <p id="final-score" class="text-xl"></p>
+            <button id="restart-button">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Variáveis globais para configuração e estado
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        // Importações do Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Inicialização do Firebase
+        let app;
+        let db;
+        let auth;
+        let userId = 'anon'; // Default para usuário anônimo
+
+        // Questões do simulado (aproximadamente 70, geradas a partir do PDF)
+        const questions = [
+            {
+                question: "De acordo com o princípio da legalidade, conforme o Art. 5º, XXXIX da CF, qual das seguintes afirmações é correta?",
+                options: [
+                    "Não há crime sem lei posterior que o defina, nem pena sem cominação legal.",
+                    "Não há crime sem lei anterior que o defina, nem pena sem prévia cominação legal.",
+                    "Crimes podem ser definidos por portarias ministeriais.",
+                    "A analogia in malam partem é permitida em casos específicos."
+                ],
+                correctAnswer: "Não há crime sem lei anterior que o defina, nem pena sem prévia cominação legal."
+            },
+            {
+                question: "O princípio da legalidade possui o escopo de conferir segurança jurídica aos cidadãos. Isso significa que:",
+                options: [
+                    "Eles podem ser punidos por crimes sem base em lei escrita.",
+                    "Não sofrerão imposição de penas criminais se suas ações eram lícitas ao tempo do ato.",
+                    "A lei pode ser vaga e indeterminada.",
+                    "A retroatividade da lei penal é sempre para prejudicar o réu."
+                ],
+                correctAnswer: "Não sofrerão imposição de penas criminais se suas ações eram lícitas ao tempo do ato."
+            },
+            {
+                question: "Qual dos seguintes não é um requisito a ser observado para a obediência ao princípio da legalidade, conforme o texto?",
+                options: [
+                    "A lei deve ser anterior ao fato.",
+                    "A lei deve ser escrita (reserva legal).",
+                    "A lei deve ser taxativa, certa, expurgada de tipos penais vagos.",
+                    "A lei pode ser aplicada por analogia que prejudique o réu (in malam partem)."
+                ],
+                correctAnswer: "A lei pode ser aplicada por analogia que prejudique o réu (in malam partem)."
+            },
+            {
+                question: "O princípio da anterioridade, que decorre do princípio da legalidade, significa que:",
+                options: [
+                    "Uma lei incriminadora pode ser criada após um fato já ocorrido.",
+                    "É necessária a existência de lei penal incriminadora posterior à prática da conduta delituosa.",
+                    "É necessária a existência de lei penal incriminadora anterior à prática da conduta delituosa.",
+                    "A segurança jurídica não é afetada pela criação de leis penais retroativas."
+                ],
+                correctAnswer: "É necessária a existência de lei penal incriminadora anterior à prática da conduta delituosa."
+            },
+            {
+                question: "O que se entende por Reserva Legal ou Estrita Legalidade, conforme o documento?",
+                options: [
+                    "Admite-se apenas a criação de leis penais por medida provisória.",
+                    "Permite a criação de delitos por meio de tratados internacionais.",
+                    "Admitem-se somente lei em sentido material (matéria reservada a lei) e formal (lei editada seguindo os requisitos previstos na CF).",
+                    "A Constituição Federal pode criar normas penais incriminadoras."
+                ],
+                correctAnswer: "Admitem-se somente lei em sentido material (matéria reservada a lei) e formal (lei editada seguindo os requisitos previstos na CF)."
+            },
+            {
+                question: "Qual tipo de norma legal no Brasil tem exclusividade para a criação de delitos e contravenções penais e a cominação de suas respectivas penas?",
+                options: [
+                    "Decretos",
+                    "Leis ordinárias ou complementares",
+                    "Regulamentos",
+                    "Portarias"
+                ],
+                correctAnswer: "Leis ordinárias ou complementares"
+            },
+            {
+                question: "A Legalidade Formal diz respeito à estrita observância do procedimento legislativo para criação da lei. Para uma lei ordinária, qual é a maioria de votos necessária, segundo a CF?",
+                options: [
+                    "Maioria absoluta.",
+                    "Maioria simples dos votos.",
+                    "Unanimidade.",
+                    "Dois terços dos votos."
+                ],
+                correctAnswer: "Maioria simples dos votos."
+            },
+            {
+                question: "O que o Princípio da Taxatividade exige do legislador na elaboração da lei penal?",
+                options: [
+                    "A criação de tipos penais vagos e subjetivos.",
+                    "O uso de linguagem uniforme, rigorosa e restritiva, evitando tipos penais excessivamente abertos.",
+                    "A possibilidade de várias condutas se encaixarem na tipificação, inclusive atos lícitos.",
+                    "A ampliação do abuso do Estado na invasão da intimidade dos indivíduos."
+                ],
+                correctAnswer: "O uso de linguagem uniforme, rigorosa e restritiva, evitando tipos penais excessivamente abertos."
+            },
+            {
+                question: "Qual princípio do Direito Penal veda as penas de caráter perpétuo, de trabalhos forçados, de banimento, cruéis, e exige respeito à integridade física e moral do preso?",
+                options: [
+                    "Princípio da Legalidade.",
+                    "Princípio da Anterioridade.",
+                    "Princípio da Humanidade.",
+                    "Princípio da Personalidade."
+                ],
+                correctAnswer: "Princípio da Humanidade."
+            },
+            {
+                question: "De acordo com o princípio da Personalidade ou da Responsabilidade Pessoal (Art. 5º, XLV da CF), o que acontece com a pena?",
+                options: [
+                    "Ela pode passar da pessoa do condenado para seus sucessores em qualquer caso.",
+                    "Nenhuma pena passará da pessoa do condenado, mas a obrigação de reparar o dano pode ser estendida aos sucessores até o limite do patrimônio transferido.",
+                    "A pena de multa pode ser cobrada dos herdeiros do condenado falecido.",
+                    "Terceiros inocentes podem responder pelo ato que não cometeram."
+                ],
+                correctAnswer: "Nenhuma pena passará da pessoa do condenado, mas a obrigação de reparar o dano pode ser estendida aos sucessores até o limite do patrimônio transferido."
+            },
+            {
+                question: "O princípio da Intervenção Mínima, ou 'ultima ratio', do Direito Penal estabelece que:",
+                options: [
+                    "O Direito Penal deve ser a primeira opção para a solução de conflitos da sociedade.",
+                    "O Direito Penal só deve preocupar-se com a proteção dos bens mais importantes, intervindo apenas em casos de ataques muito graves.",
+                    "As perturbações mais leves do ordenamento jurídico são sempre objeto do Direito Penal.",
+                    "O poder punitivo do Estado não deve ser limitado."
+                ],
+                correctAnswer: "O Direito Penal só deve preocupar-se com a proteção dos bens mais importantes, intervindo apenas em casos de ataques muito graves."
+            },
+            {
+                question: "O Princípio da Subsidiariedade do Direito Penal afirma que:",
+                options: [
+                    "A lei penal deve ser a 'prima ratio' na resolução de litígios.",
+                    "O Direito Penal deve ser aplicado após frustradas todas as outras formas de composição de litígios.",
+                    "Seus métodos atingem de maneira menos intensa a liberdade individual.",
+                    "Não há necessidade de retração do Direito Penal, mesmo quando outros meios são suficientes."
+                ],
+                correctAnswer: "O Direito Penal deve ser aplicado após frustradas todas as outras formas de composição de litígios."
+            },
+            {
+                question: "O caráter fragmentário do Direito Penal significa que:",
+                options: [
+                    "Todas as ações que atacam bens jurídicos são proibidas pelo Direito Penal.",
+                    "Todos os bens jurídicos são protegidos pelo Direito Penal.",
+                    "O Direito Penal se limita a punir ações mais graves contra os bens jurídicos mais importantes.",
+                    "Ele se ocupa de todos os bens e interesses do ordenamento jurídico."
+                ],
+                correctAnswer: "O Direito Penal se limita a punir ações mais graves contra os bens jurídicos mais importantes."
+            },
+            {
+                question: "O Princípio da Proporcionalidade no Direito Penal exige que as penas sejam:",
+                options: [
+                    "Desproporcionais à gravidade da infração.",
+                    "Fixas, independentemente da conduta.",
+                    "Proporcionais à gravidade da infração penal cometida, vedados o exagero na punição e a extrema liberdade.",
+                    "Sempre as mais severas possíveis para garantir a punição."
+                ],
+                correctAnswer: "Proporcionais à gravidade da infração penal cometida, vedados o exagero na punição e a extrema liberdade."
+            },
+            {
+                question: "A proporcionalidade em sentido estrito, conforme o texto, se dá em três dimensões: juízo de adequação, de necessidade e:",
+                options: [
+                    "De razoabilidade.",
+                    "De culpabilidade.",
+                    "De proporcionalidade em sentido estrito.",
+                    "De legalidade."
+                ],
+                correctAnswer: "De proporcionalidade em sentido estrito."
+            },
+            {
+                question: "O princípio da Vedação da Dupla Punição pelo Mesmo Fato é conhecido como:",
+                options: [
+                    "Nullum crimen sine lege.",
+                    "Nulla poena sine praevia lege.",
+                    "Ne bis in idem.",
+                    "Lex specialis."
+                ],
+                correctAnswer: "Ne bis in idem."
+            },
+            {
+                question: "Qual o status do Princípio da Dignidade da Pessoa Humana na Constituição Federal, segundo o texto?",
+                options: [
+                    "É um princípio secundário do Direito Penal.",
+                    "Alcança o status de fundamento da República.",
+                    "Limita apenas a atuação do Poder Judiciário.",
+                    "Permite o tratamento degradante em algumas execuções penais."
+                ],
+                correctAnswer: "Alcança o status de fundamento da República."
+            },
+            {
+                question: "O Princípio da Lesividade (ou Ofensividade) exige que do fato praticado ocorra:",
+                options: [
+                    "Apenas o desvalor da conduta.",
+                    "Lesão ou perigo de lesão ao bem jurídico tutelado.",
+                    "A mera intenção de cometer o crime.",
+                    "Somente o desvalor do resultado, sem a conduta."
+                ],
+                correctAnswer: "Lesão ou perigo de lesão ao bem jurídico tutelado."
+            },
+            {
+                question: "Qual a natureza jurídica do Direito Penal?",
+                options: [
+                    "É uma ciência empírica.",
+                    "É um ramo do direito privado.",
+                    "É uma ciência normativa (fundada em leis) e ramo do direito público.",
+                    "Não tem por objetivo impor limites à atividade estatal."
+                ],
+                correctAnswer: "É uma ciência normativa (fundada em leis) e ramo do direito público."
+            },
+            {
+                question: "O que o termo 'Jus puniendi' significa?",
+                options: [
+                    "O direito do cidadão de não ser punido.",
+                    "O direito de punir do Estado.",
+                    "O direito à defesa.",
+                    "O direito à liberdade."
+                ],
+                correctAnswer: "O direito de punir do Estado."
+            },
+            {
+                question: "Qual a diferença entre Direito Penal Objetivo e Direito Penal Subjetivo?",
+                options: [
+                    "Direito Penal Objetivo é o direito de punir do Estado, e Subjetivo é o conjunto de normas.",
+                    "Direito Penal Objetivo é o conjunto de normas de natureza penal, e Subjetivo é o direito de punir do Estado.",
+                    "Ambos significam a mesma coisa.",
+                    "Direito Penal Objetivo se aplica apenas a crimes graves, e Subjetivo a crimes leves."
+                ],
+                correctAnswer: "Direito Penal Objetivo é o conjunto de normas de natureza penal, e Subjetivo é o direito de punir do Estado."
+            },
+            {
+                question: "Segundo Jean-Jacques Rousseau, o contrato social é um acordo entre indivíduos para:",
+                options: [
+                    "Criar um Estado antes de uma sociedade.",
+                    "Se submeter a um governante.",
+                    "Criar uma sociedade, e só então um Estado.",
+                    "Degenerar o homem na sociedade."
+                ],
+                correctAnswer: "Criar uma sociedade, e só então um Estado."
+            },
+            {
+                question: "O que é uma Norma Penal Incriminadora?",
+                options: [
+                    "Define as infrações penais, proibindo ou impondo condutas, sob ameaça de pena.",
+                    "Torna lícitas determinadas condutas.",
+                    "Afastam a culpabilidade do agente.",
+                    "Esclarece conceitos, sem impor conduta."
+                ],
+                correctAnswer: "Define as infrações penais, proibindo ou impondo condutas, sob ameaça de pena."
+            },
+            {
+                question: "Qual é a função do Preceito Secundário de uma norma penal incriminadora?",
+                options: [
+                    "Descrever a conduta proibida.",
+                    "Estabelecer as penas.",
+                    "Afastar a ilicitude.",
+                    "Explicar conceitos."
+                ],
+                correctAnswer: "Estabelecer as penas."
+            },
+            {
+                question: "As Normas Penais Permissivas Justificantes têm qual função?",
+                options: [
+                    "Afastar a culpabilidade do agente.",
+                    "Tornar lícitas determinadas condutas, afastando a ilicitude.",
+                    "Esclarecer conceitos.",
+                    "Fornecer princípios gerais para aplicação da lei penal."
+                ],
+                correctAnswer: "Tornar lícitas determinadas condutas, afastando a ilicitude."
+            },
+            {
+                question: "Qual princípio é utilizado para resolver o conflito aparente de normas, onde a norma especial afasta a norma geral?",
+                options: [
+                    "Princípio da Consunção.",
+                    "Princípio da Subsidiariedade.",
+                    "Princípio da Especialidade.",
+                    "Princípio da Alternatividade."
+                ],
+                correctAnswer: "Princípio da Especialidade."
+            },
+            {
+                question: "No Princípio da Subsidiariedade, a lei penal deverá ser aplicada:",
+                options: [
+                    "De forma prioritária em todos os casos.",
+                    "Após frustradas todas as outras formas de composição de litígios.",
+                    "Apenas em casos de crimes menos graves.",
+                    "Mesmo que os meios de Direito Civil sejam suficientes."
+                ],
+                correctAnswer: "Após frustradas todas as outras formas de composição de litígios."
+            },
+            {
+                question: "O Princípio da Consunção aplica-se em quais situações?",
+                options: [
+                    "Quando um crime é meio necessário ou fase de preparação de outro crime, e nas situações de antefato e pós-fato impuníveis.",
+                    "Apenas quando há concurso material de crimes.",
+                    "Quando a lei penal é subsidiária.",
+                    "Somente em crimes plurinucleares."
+                ],
+                correctAnswer: "Quando um crime é meio necessário ou fase de preparação de outro crime, e nas situações de antefato e pós-fato impuníveis."
+            },
+            {
+                question: "Qual a diferença entre pena e medida de segurança?",
+                options: [
+                    "A pena tem por pressuposto a periculosidade, e a medida de segurança a culpabilidade.",
+                    "A pena tem por pressuposto a culpabilidade, e a medida de segurança a periculosidade.",
+                    "Ambas têm o mesmo pressuposto.",
+                    "A pena é aplicável apenas a inimputáveis."
+                ],
+                correctAnswer: "A pena tem por pressuposto a culpabilidade, e a medida de segurança a periculosidade."
+            },
+            {
+                question: "Qual sistema o Código Penal brasileiro adota para inimputáveis?",
+                options: [
+                    "Sistema psicológico.",
+                    "Sistema biopsicológico.",
+                    "Sistema biológico.",
+                    "Sistema social."
+                ],
+                correctAnswer: "Sistema biopsicológico."
+            },
+            {
+                question: "O sistema penal brasileiro admite a cumulação de pena e medida de segurança?",
+                options: [
+                    "Sim, sempre.",
+                    "Sim, apenas para semi-imputáveis.",
+                    "Não, adotando o SISTEMA VICARIANTE DE PENA.",
+                    "Não, adotando o sistema duplo-binário."
+                ],
+                correctAnswer: "Não, adotando o SISTEMA VICARIANTE DE PENA."
+            },
+            {
+                question: "Em uma Sentença Absolutória Imprópria, o que acontece?",
+                options: [
+                    "Não é imposta nenhuma sanção ou penalização ao réu.",
+                    "A sentença reconhece a existência do crime, mas a penalização é revertida em medida de segurança.",
+                    "O réu é sempre absolvido por inexistência de provas.",
+                    "O crime é considerado atípico."
+                ],
+                correctAnswer: "A sentença reconhece a existência do crime, mas a penalização é revertida em medida de segurança."
+            },
+            {
+                question: "Qual o entendimento do Superior Tribunal de Justiça (STJ) sobre o tempo máximo de duração da medida de segurança?",
+                options: [
+                    "Aceita a perpetuidade da medida.",
+                    "Estabelece o limite temporal de 30 anos, sem distinção conforme o crime.",
+                    "Não deve ultrapassar o limite máximo da pena abstratamente cominada ao delito praticado.",
+                    "Não há limite temporal para a medida de segurança."
+                ],
+                correctAnswer: "Não deve ultrapassar o limite máximo da pena abstratamente cominada ao delito praticado."
+            },
+            {
+                question: "De acordo com a Lei nº 13.964/2019 (Pacote Anticrime), qual o tempo máximo de cumprimento das penas privativas de liberdade?",
+                options: [
+                    "30 anos.",
+                    "40 anos.",
+                    "20 anos.",
+                    "Não há limite."
+                ],
+                correctAnswer: "40 anos."
+            },
+            {
+                question: "A Súmula 711 do STF estabelece que a lei penal mais grave se aplica ao crime continuado ou ao crime permanente se:",
+                options: [
+                    "Sua vigência for anterior à consumação do primeiro crime.",
+                    "Sua vigência é anterior à cessação da continuidade ou da permanência.",
+                    "Sua vigência for posterior à cessação da continuidade ou da permanência.",
+                    "A lei for mais benéfica ao réu."
+                ],
+                correctAnswer: "Sua vigência é anterior à cessação da continuidade ou da permanência."
+            },
+            {
+                question: "No Sistema Trifásico de Nelson Hungria, qual a primeira fase para fixação da pena?",
+                options: [
+                    "Considerar as circunstâncias atenuantes e agravantes.",
+                    "Fixar a pena base atendendo às circunstâncias judiciais do art. 59 do CP.",
+                    "Aplicar as causas de diminuição e de aumento de pena.",
+                    "Definir o regime inicial de cumprimento da pena."
+                ],
+                correctAnswer: "Fixar a pena base atendendo às circunstâncias judiciais do art. 59 do CP."
+            },
+            {
+                question: "A Súmula 231 do STJ determina que a incidência da circunstância atenuante:",
+                options: [
+                    "Pode reduzir a pena abaixo do mínimo legal.",
+                    "Não pode conduzir à redução da pena abaixo do mínimo legal.",
+                    "Pode aumentar a pena acima do máximo legal.",
+                    "É irrelevante para a fixação da pena."
+                ],
+                correctAnswer: "Não pode conduzir à redução da pena abaixo do mínimo legal."
+            },
+            {
+                question: "Qual o regime inicial de cumprimento de pena de reclusão admitido, segundo o Art. 33 do CP?",
+                options: [
+                    "Apenas o regime fechado.",
+                    "Apenas o regime semiaberto.",
+                    "Fechado, semiaberto ou aberto.",
+                    "Apenas o regime aberto."
+                ],
+                correctAnswer: "Fechado, semiaberto ou aberto."
+            },
+            {
+                question: "Para o condenado a pena superior a 8 (oito) anos, reincidente ou não, e independentemente das circunstâncias judiciais, qual regime inicial de reclusão deverá iniciar, conforme o texto?",
+                options: [
+                    "Semiaberto.",
+                    "Aberto.",
+                    "Fechado.",
+                    "Qualquer um, a critério do juiz."
+                ],
+                correctAnswer: "Fechado."
+            },
+            {
+                question: "A Súmula 718 do STF estabelece que a opinião do julgador sobre a gravidade em abstrato do crime:",
+                options: [
+                    "Constitui motivação idônea para regime mais severo.",
+                    "Não constitui motivação idônea para a imposição de regime mais severo do que o permitido.",
+                    "Pode ser utilizada para agravar a pena-base.",
+                    "É o único critério para fixar o regime inicial."
+                ],
+                correctAnswer: "Não constitui motivação idônea para a imposição de regime mais severo do que o permitido."
+            },
+            {
+                question: "A Detração é o cômputo, na pena privativa de liberdade e na medida de segurança, do tempo de:",
+                options: [
+                    "Prisão domiciliar com tornozeleira eletrônica apenas.",
+                    "Prisão provisória, prisão administrativa ou internação em hospital de custódia.",
+                    "Apenas do tempo de trabalho na prisão.",
+                    "Somente do tempo de estudo."
+                ],
+                correctAnswer: "Prisão provisória, prisão administrativa ou internação em hospital de custódia."
+            },
+            {
+                question: "Qual o fundamento da Detração, segundo o documento?",
+                options: [
+                    "Aumento da pena.",
+                    "Vedação ao bis in idem (ninguém pode ser punido duas vezes pelo mesmo fato).",
+                    "Acelerar o processo judicial.",
+                    "Facilitar a extradição de presos."
+                ],
+                correctAnswer: "Vedação ao bis in idem (ninguém pode ser punido duas vezes pelo mesmo fato)."
+            },
+            {
+                question: "A Terceira Seção do STJ definiu ser possível o benefício da Detração no caso de cumprimento da medida cautelar de:",
+                options: [
+                    "Proibição de frequentar determinados lugares.",
+                    "Suspensão do exercício de função pública.",
+                    "Recolhimento domiciliar cumulada com fiscalização eletrônica.",
+                    "Internação provisória apenas em hospitais."
+                ],
+                correctAnswer: "Recolhimento domiciliar cumulada com fiscalização eletrônica."
+            },
+            {
+                question: "Na Medida de Segurança, a detração opera em relação ao prazo mínimo de internação ou tratamento ambulatorial (um a três anos) para:",
+                options: [
+                    "Aumentar o período de internação.",
+                    "Antecipar a realização do exame de cessação de periculosidade.",
+                    "Tornar a medida de segurança perpétua.",
+                    "Anular a medida de segurança."
+                ],
+                correctAnswer: "Antecipar a realização do exame de cessação de periculosidade."
+            },
+            {
+                question: "Qual o percentual de cumprimento de pena para progressão de regime de apenado primário e crime sem violência ou grave ameaça, conforme a LEP?",
+                options: [
+                    "16%",
+                    "20%",
+                    "25%",
+                    "30%"
+                ],
+                correctAnswer: "16%"
+            },
+            {
+                question: "Se o apenado for condenado pela prática de crime hediondo ou equiparado, e for primário, qual o percentual de cumprimento de pena para progressão de regime?",
+                options: [
+                    "30%",
+                    "40%",
+                    "50%",
+                    "60%"
+                ],
+                correctAnswer: "40%"
+            },
+            {
+                question: "Qual a principal finalidade da remição da pena?",
+                options: [
+                    "Punir o preso por novas infrações.",
+                    "Abreviar o tempo de cumprimento da pena privativa de liberdade pelo trabalho ou estudo, evitando o ócio e estimulando a produção humana.",
+                    "Aumentar a vigilância sobre o preso.",
+                    "Impedir o acesso à educação na prisão."
+                ],
+                correctAnswer: "Abreviar o tempo de cumprimento da pena privativa de liberdade pelo trabalho ou estudo, evitando o ócio e estimulando a produção humana."
+            },
+            {
+                question: "Quantos dias de trabalho são necessários para remir 1 dia de pena, no regime fechado ou semiaberto?",
+                options: [
+                    "1 dia de trabalho.",
+                    "2 dias de trabalho.",
+                    "3 dias de trabalho.",
+                    "4 dias de trabalho."
+                ],
+                correctAnswer: "3 dias de trabalho."
+            },
+            {
+                question: "Cabe remição na prisão provisória?",
+                options: [
+                    "Não, nunca.",
+                    "Sim, apenas se o crime não for hediondo.",
+                    "Sim, é permitido.",
+                    "Apenas em casos de crimes culposos."
+                ],
+                correctAnswer: "Sim, é permitido."
+            },
+            {
+                question: "A remição ficta, que ocorre quando o preso não trabalha por insuficiência administrativa estatal, é admitida pelo STJ?",
+                options: [
+                    "Sim, é pacificamente aceita.",
+                    "Não, o STJ entende que não é possível.",
+                    "Sim, mas apenas em casos de crimes leves.",
+                    "Apenas se houver decisão judicial prévia."
+                ],
+                correctAnswer: "Não, o STJ entende que não é possível."
+            },
+            {
+                question: "De acordo com a LEP, para remição pelo estudo, quantas horas de frequência escolar equivalem a 1 dia de pena?",
+                options: [
+                    "6 horas.",
+                    "8 horas.",
+                    "10 horas.",
+                    "12 horas."
+                ],
+                correctAnswer: "12 horas."
+            },
+            {
+                question: "A prática de falta grave durante a execução da pena pode revogar quantos dias remidos?",
+                options: [
+                    "Até 1/4 (um quarto).",
+                    "Até 1/3 (um terço).",
+                    "Todos os dias remidos.",
+                    "Nenhum dia remido, pois é direito adquirido."
+                ],
+                correctAnswer: "Até 1/3 (um terço)."
+            },
+            {
+                question: "Qual o limite anual de livros lidos para fins de remição de pena pela leitura, conforme a Resolução CNJ Nº 391/2021?",
+                options: [
+                    "6 livros por ano.",
+                    "10 livros por ano.",
+                    "12 livros por ano.",
+                    "Não há limite."
+                ],
+                correctAnswer: "12 livros por ano."
+            },
+            {
+                question: "Qual o conceito de Culpabilidade no Direito Penal?",
+                options: [
+                    "Um juízo que recai sobre o fato, não sobre o autor.",
+                    "O liame subjetivo que vincula o agente ao fato, incluindo dolo e culpa.",
+                    "Um juízo de reprovação pessoal que recai sobre o autor do fato típico e ilícito.",
+                    "Apenas a imputabilidade do agente."
+                ],
+                correctAnswer: "Um juízo de reprovação pessoal que recai sobre o autor do fato típico e ilícito."
+            },
+            {
+                question: "Qual teoria da culpabilidade é adotada pelo Código Penal brasileiro, que considera imputabilidade, exigibilidade de conduta diversa e potencial consciência da ilicitude como seus elementos?",
+                options: [
+                    "Teoria Psicológica Pura.",
+                    "Teoria Psicológico-Normativa.",
+                    "Teoria Normativa Pura (Teoria Limitada da Culpabilidade).",
+                    "Teoria Absoluta."
+                ],
+                correctAnswer: "Teoria Normativa Pura (Teoria Limitada da Culpabilidade)."
+            },
+            {
+                question: "Na Teoria Limitada da Culpabilidade, o erro sobre pressuposto fático da causa de justificação (erro de fato) aplica-se às mesmas regras do:",
+                options: [
+                    "Erro de proibição.",
+                    "Erro de tipo (Erro de Tipo Permissivo).",
+                    "Erro de cálculo.",
+                    "Dolo eventual."
+                ],
+                correctAnswer: "Erro de tipo (Erro de Tipo Permissivo)."
+            },
+            {
+                question: "Qual a finalidade da pena para a TEORIA ABSOLUTA?",
+                options: [
+                    "Prevenção geral e especial.",
+                    "Ressocialização do condenado.",
+                    "Retribuição (impor um castigo).",
+                    "Prevenção da reincidência."
+                ],
+                correctAnswer: "Retribuição (impor um castigo)."
+            },
+            {
+                question: "A teoria mista, adotada pelo Código Penal, concilia quais finalidades da pena?",
+                options: [
+                    "Apenas a reprovação do crime.",
+                    "Apenas a prevenção do crime.",
+                    "Retribuição e prevenção do crime.",
+                    "Apenas a ressocialização."
+                ],
+                correctAnswer: "Retribuição e prevenção do crime."
+            },
+            {
+                question: "A PREVENÇÃO GERAL NEGATIVA da pena busca:",
+                options: [
+                    "Afirmar a existência de um ordenamento jurídico vigente.",
+                    "Desestimular a sociedade a cometer crimes (intimidação).",
+                    "A ressocialização do condenado.",
+                    "Impedir que o agente pratique novos crimes."
+                ],
+                correctAnswer: "Desestimular a sociedade a cometer crimes (intimidação)."
+            },
+            {
+                question: "A PREVENÇÃO ESPECIAL POSITIVA da pena busca:",
+                options: [
+                    "Impedir a reincidência.",
+                    "Afirmar a existência de um ordenamento jurídico.",
+                    "A ressocialização do condenado.",
+                    "Intimidar a sociedade."
+                ],
+                correctAnswer: "A ressocialização do condenado."
+            },
+            {
+                question: "Qual a competência para o julgamento dos crimes dolosos contra a vida, conforme o Art. 5º, XXXVIII, da CF?",
+                options: [
+                    "Juízo de exceção.",
+                    "Tribunal de exceção.",
+                    "Instituição do júri.",
+                    "Corte especial."
+                ],
+                correctAnswer: "Instituição do júri."
+            },
+            {
+                question: "A lei penal não retroagirá, salvo para:",
+                options: [
+                    "Prejudicar o réu.",
+                    "Criar novos crimes.",
+                    "Beneficiar o réu.",
+                    "Alterar a competência do júri."
+                ],
+                correctAnswer: "Beneficiar o réu."
+            },
+            {
+                question: "A prática do racismo constitui, conforme a CF:",
+                options: [
+                    "Crime afiançável e prescritível.",
+                    "Crime inafiançável e imprescritível.",
+                    "Contravenção penal.",
+                    "Delito de menor potencial ofensivo."
+                ],
+                correctAnswer: "Crime inafiançável e imprescritível."
+            },
+            {
+                question: "As penas de tortura, tráfico ilícito de entorpecentes, terrorismo e crimes hediondos são consideradas, pela lei:",
+                options: [
+                    "Afiançáveis e suscetíveis de graça ou anistia.",
+                    "Inafiançáveis e insuscetíveis de graça ou anistia.",
+                    "Suscetíveis de perdão judicial em todos os casos.",
+                    "Com regime inicial aberto obrigatório."
+                ],
+                correctAnswer: "Inafiançáveis e insuscetíveis de graça ou anistia."
+            },
+            {
+                question: "A Constituição Federal veda expressamente quais tipos de penas?",
+                options: [
+                    "Multa e restrição de direitos.",
+                    "Privação de liberdade por até 40 anos.",
+                    "De morte (salvo em caso de guerra), de caráter perpétuo, de trabalhos forçados, de banimento, cruéis.",
+                    "Apenas penas de multa."
+                ],
+                correctAnswer: "De morte (salvo em caso de guerra), de caráter perpétuo, de trabalhos forçados, de banimento, cruéis."
+            },
+            {
+                question: "É assegurado aos presos, conforme a CF, o respeito à:",
+                options: [
+                    "Apenas à integridade física.",
+                    "Apenas à integridade moral.",
+                    "Integridade física e moral.",
+                    "Apenas à liberdade de locomoção."
+                ],
+                correctAnswer: "Integridade física e moral."
+            },
+            {
+                question: "Qual o direito do preso em relação à sua prisão ou interrogatório policial?",
+                options: [
+                    "Identificação dos responsáveis.",
+                    "Não ser informado sobre seus direitos.",
+                    "Ser submetido a tortura.",
+                    "Ser mantido calado sem assistência."
+                ],
+                correctAnswer: "Identificação dos responsáveis."
+            },
+            {
+                question: "A prisão ilegal será imediatamente relaxada por qual autoridade?",
+                options: [
+                    "Pela polícia.",
+                    "Pelo Ministério Público.",
+                    "Pela autoridade judiciária.",
+                    "Pelo diretor do estabelecimento penal."
+                ],
+                correctAnswer: "Pela autoridade judiciária."
+            },
+            {
+                question: "Quando será concedido 'habeas-corpus'?",
+                options: [
+                    "Apenas em caso de prisão por crime político.",
+                    "Sempre que alguém sofrer ou se achar ameaçado de sofrer violência ou coação em sua liberdade de locomoção, por ilegalidade ou abuso de poder.",
+                    "Somente após o trânsito em julgado da sentença.",
+                    "Quando a pena for de multa."
+                ],
+                correctAnswer: "Sempre que alguém sofrer ou se achar ameaçado de sofrer violência ou coação em sua liberdade de locomoção, por ilegalidade ou abuso de poder."
+            },
+            {
+                question: "O princípio da Bagatela Imprópria (ou insignificância imprópria) é uma causa supralegal de:",
+                options: [
+                    "Exclusão da tipicidade.",
+                    "Exclusão da antijuridicidade.",
+                    "Exclusão da culpabilidade.",
+                    "Extinção da punibilidade."
+                ],
+                correctAnswer: "Extinção da punibilidade."
+            },
+            {
+                question: "Um exemplo de Bagatela Imprópria, conforme o texto, é:",
+                options: [
+                    "Furto de uma caneta comum.",
+                    "Pagamento do tributo nos crimes tributários.",
+                    "Ação penal sem dolo.",
+                    "Crime de descaminho."
+                ],
+                correctAnswer: "Pagamento do tributo nos crimes tributários."
+            },
+            {
+                question: "A jurisprudência do STF e STJ entende que o pagamento do tributo, a qualquer tempo, é causa de extinção da punibilidade. Essa regra se aplica ao crime de descaminho?",
+                options: [
+                    "Sim, sempre.",
+                    "Não, pois o crime de descaminho é formal e o bem jurídico tutelado vai além do imposto sonegado.",
+                    "Sim, apenas se o pagamento ocorrer antes da denúncia.",
+                    "Não, apenas para crimes contra a ordem tributária."
+                ],
+                correctAnswer: "Não, pois o crime de descaminho é formal e o bem jurídico tutelado vai além do imposto sonegado."
+            },
+            {
+                question: "A Súmula 444 do STJ veda a utilização de quais elementos para agravar a pena-base?",
+                options: [
+                    "Antecedentes e conduta social.",
+                    "Inquéritos policiais e ações penais em curso.",
+                    "Culpabilidade e motivos do crime.",
+                    "Consequências do crime e comportamento da vítima."
+                ],
+                correctAnswer: "Inquéritos policiais e ações penais em curso."
+            },
+            {
+                question: "O Art. 59 do CP estabelece que o juiz, ao fixar a pena, deverá atender a quais critérios?",
+                options: [
+                    "Apenas à gravidade abstrata do delito.",
+                    "Culpabilidade, antecedentes, conduta social, personalidade do agente, motivos, circunstâncias e consequências do crime, comportamento da vítima.",
+                    "Somente ao tipo de pena cominada.",
+                    "Apenas ao regime inicial de cumprimento da pena."
+                ],
+                correctAnswer: "Culpabilidade, antecedentes, conduta social, personalidade do agente, motivos, circunstâncias e consequências do crime, comportamento da vítima."
+            },
+            {
+                question: "Qual regime a pena de detenção admite, conforme o Código Penal?",
+                options: [
+                    "Apenas fechado.",
+                    "Fechado e semiaberto.",
+                    "Semiaberto ou aberto, salvo necessidade de transferência a regime fechado.",
+                    "Apenas aberto."
+                ],
+                correctAnswer: "Semiaberto ou aberto, salvo necessidade de transferência a regime fechado."
+            },
+            {
+                question: "Para o condenado não reincidente, cuja pena de reclusão seja superior a 4 (quatro) anos e não exceda a 8 (oito), qual regime inicial poderá ser cumprido, em princípio?",
+                options: [
+                    "Fechado.",
+                    "Semiaberto.",
+                    "Aberto.",
+                    "Domiciliar."
+                ],
+                correctAnswer: "Semiaberto."
+            },
+            {
+                question: "A Súmula 269 do STJ torna admissível a adoção de qual regime prisional aos reincidentes condenados a pena igual ou inferior a quatro anos, se favoráveis as circunstâncias judiciais?",
+                options: [
+                    "Fechado.",
+                    "Semiaberto.",
+                    "Aberto.",
+                    "Domiciliar."
+                ],
+                correctAnswer: "Semiaberto."
+            },
+            {
+                question: "Quando ocorrerá a REGRESSÃO DE REGIME do apenado, conforme o artigo 118 da LEP?",
+                options: [
+                    "Apenas se praticar falta leve.",
+                    "Se praticar fato definido como CRIME DOLOSO ou FALTA GRAVE; ou SOFRER CONDENAÇÃO por crime anterior que torne incabível o regime atual.",
+                    "Se for aprovado em exame criminológico.",
+                    "Seu regime for alterado para mais brando."
+                ],
+                correctAnswer: "Se praticar fato definido como CRIME DOLOSO ou FALTA GRAVE; ou SOFRER CONDENAÇÃO por crime anterior que torne incabível o regime atual."
+            },
+            {
+                question: "Qual das seguintes não é uma hipótese de falta grave, de acordo com o art. 50 da LEP?",
+                options: [
+                    "Fugir.",
+                    "Possuir, indevidamente, instrumento capaz de ofender a integridade física de outrem.",
+                    "Receber visita íntima.",
+                    "Utilizar aparelho telefônico que permita comunicação com outros presos ou ambiente externo."
+                ],
+                correctAnswer: "Receber visita íntima."
+            },
+            {
+                question: "A Resolução CNJ nº 348/2020 estabelece diretrizes para o tratamento de qual população no âmbito criminal?",
+                options: [
+                    "Apenas crianças e adolescentes.",
+                    "Apenas idosos.",
+                    "População lésbica, gay, bissexual, transexual, travesti ou intersexo (LGBTI).",
+                    "Apenas pessoas com deficiência."
+                ],
+                correctAnswer: "População lésbica, gay, bissexual, transexual, travesti ou intersexo (LGBTI)."
+            },
+            {
+                question: "Em caso de prisão da pessoa autodeclarada LGBTI, o local de privação de liberdade será definido por:",
+                options: [
+                    "O diretor do estabelecimento prisional.",
+                    "Agentes de segurança.",
+                    "O magistrado em decisão fundamentada, após questionamento da preferência da pessoa presa.",
+                    "A polícia, no momento da prisão."
+                ],
+                correctAnswer: "O magistrado em decisão fundamentada, após questionamento da preferência da pessoa presa."
+            },
+            {
+                question: "É lícita a prova obtida pela polícia, por meio da extração de conversas do celular apreendido do preso no momento do flagrante, quando ausente autorização judicial, segundo o STJ?",
+                options: [
+                    "Sim, sempre.",
+                    "Não, é ilícita.",
+                    "Sim, desde que o crime seja grave.",
+                    "Apenas se o preso concordar verbalmente."
+                ],
+                correctAnswer: "Não, é ilícita."
+            },
+            {
+                question: "A Súmula 716 do STF permite a progressão de regime de cumprimento da pena ou a aplicação imediata de regime menos severo:",
+                options: [
+                    "Apenas após o trânsito em julgado da sentença condenatória.",
+                    "Antes do trânsito em julgado da sentença condenatória.",
+                    "Somente para crimes não hediondos.",
+                    "Apenas com autorização do Ministério Público."
+                ],
+                correctAnswer: "Antes do trânsito em julgado da sentença condenatória."
+            },
+            {
+                question: "Qual o percentual de cumprimento de pena para progressão de regime de apenado reincidente em crime cometido sem violência à pessoa ou grave ameaça?",
+                options: [
+                    "16%",
+                    "20%",
+                    "25%",
+                    "30%"
+                ],
+                correctAnswer: "20%"
+            },
+            {
+                question: "Se o apenado for reincidente na prática de crime hediondo ou equiparado, qual o percentual de cumprimento de pena para progressão de regime?",
+                options: [
+                    "40%",
+                    "50%",
+                    "60%",
+                    "70%"
+                ],
+                correctAnswer: "60%"
+            },
+            {
+                question: "A Lei nº 14.843, de 2024, alterou o § 1º do art. 112 da LEP. Qual a principal mudança em relação à progressão de regime?",
+                options: [
+                    "Tornou o exame criminológico facultativo novamente.",
+                    "Passou a exigir novamente a realização do exame criminológico.",
+                    "Removeu a necessidade de boa conduta carcerária.",
+                    "Apenas considerou a idade do apenado."
+                ],
+                correctAnswer: "Passou a exigir novamente a realização do exame criminológico."
+            },
+            {
+                question: "Qual Súmula do STJ é utilizada para determinar que a posse, pelo apenado, de aparelho celular ou de seus componentes essenciais constitui falta grave?",
+                options: [
+                    "Súmula 658.",
+                    "Súmula 659.",
+                    "Súmula 660.",
+                    "Súmula 661."
+                ],
+                correctAnswer: "Súmula 660."
+            },
+            {
+                question: "De acordo com o art. 4º da Lei 12.850/13, o juiz poderá, a requerimento das partes, conceder o perdão judicial, reduzir em até 2/3 a pena privativa de liberdade ou substituí-la por restritiva de direitos para aquele que tenha colaborado efetiva e voluntariamente com:",
+                options: [
+                    "Apenas a defesa do réu.",
+                    "A investigação e o processo criminal, desde que advenha um resultado específico.",
+                    "A acusação, sem resultados específicos.",
+                    "O pagamento de multas."
+                ],
+                correctAnswer: "A investigação e o processo criminal, desde que advenha um resultado específico."
+            },
+            {
+                question: "A Súmula Vinculante 56 do STF estabelece que a falta de estabelecimento penal adequado:",
+                options: [
+                    "Autoriza a manutenção do condenado em regime prisional mais gravoso.",
+                    "Não autoriza a manutenção do condenado em regime prisional mais gravoso.",
+                    "Impede qualquer progressão de regime.",
+                    "Permite a prisão em qualquer lugar."
+                ],
+                correctAnswer: "Não autoriza a manutenção do condenado em regime prisional mais gravoso."
+            },
+            {
+                question: "A progressão especial para mulher gestante, mãe ou responsável por crianças/pessoas com deficiência exige o cumprimento de ao menos quanto da pena no regime anterior?",
+                options: [
+                    "1/3 (um terço).",
+                    "1/4 (um quarto).",
+                    "1/8 (um oitavo).",
+                    "1/2 (metade)."
+                ],
+                correctAnswer: "1/8 (um oitavo)."
+            },
+            {
+                question: "Quais são as espécies de penas privativas de liberdade previstas na legislação penal?",
+                options: [
+                    "Apenas multa.",
+                    "Reclusão, detenção e prisão simples.",
+                    "Apenas restrição de direitos.",
+                    "Trabalhos forçados e banimento."
+                ],
+                correctAnswer: "Reclusão, detenção e prisão simples."
+            },
+            {
+                question: "As penas restritivas de direitos, também chamadas de 'penas alternativas', têm como finalidade:",
+                options: [
+                    "Apenas aumentar o tempo de prisão.",
+                    "Limitar alguns direitos do condenado como forma de cumprir a pena, ao invés do encarceramento.",
+                    "Impor castigos cruéis.",
+                    "Ignorar a culpabilidade do agente."
+                ],
+                correctAnswer: "Limitar alguns direitos do condenado como forma de cumprir a pena, ao invés do encarceramento."
+            },
+            {
+                question: "Qual dos seguintes não é um requisito para a substituição de pena privativa de liberdade por restritiva de direitos, conforme o Art. 44 do CP?",
+                options: [
+                    "Não ter havido violência ou ameaça no cometimento do crime e pena não ser maior que 4 anos (ou crime culposo, independente da pena).",
+                    "O réu ser reincidente em crime doloso.",
+                    "O réu não ter maus antecedentes.",
+                    "A substituição ser socialmente recomendável e suficiente."
+                ],
+                correctAnswer: "O réu ser reincidente em crime doloso."
+            },
+            {
+                question: "No caso de Lei Maria da Penha (crime ou contravenção penal contra a mulher com violência ou grave ameaça no ambiente doméstico), é possível a substituição de pena privativa de liberdade por restritiva de direitos?",
+                options: [
+                    "Sim, sempre.",
+                    "Sim, apenas se a pena for inferior a 1 ano.",
+                    "Não, a Súmula 588 do STJ impossibilita a substituição.",
+                    "Apenas se houver perdão judicial."
+                ],
+                correctAnswer: "Não, a Súmula 588 do STJ impossibilita a substituição."
+            },
+            {
+                question: "De acordo com a Lei 14.071/20 (CTB), NÃO cabe a substituição da pena privativa de liberdade por pena restritiva de direitos na hipótese do motorista embriagado provocar:",
+                options: [
+                    "Apenas dano material.",
+                    "Lesão corporal culposa ou homicídio culposo.",
+                    "Apenas infração leve.",
+                    "Dano moral."
+                ],
+                correctAnswer: "Lesão corporal culposa ou homicídio culposo."
+            },
+            {
+                question: "No julgamento do HC 97.256, o STF concluiu pela inconstitucionalidade da expressão 'vedada a conversão em penas restritivas de direitos' no Art. 44 da Lei de Drogas. Isso significa que:",
+                options: [
+                    "A substituição de pena por restritiva de direitos é sempre proibida para crimes de tráfico.",
+                    "A substituição de pena por restritiva de direitos para crimes de tráfico (Art. 33, caput e § 1º) é agora possível, desde que preenchidos os requisitos.",
+                    "Não há mais livramento condicional para crimes de tráfico.",
+                    "A fiança é permitida para crimes de tráfico."
+                ],
+                correctAnswer: "A substituição de pena por restritiva de direitos para crimes de tráfico (Art. 33, caput e § 1º) é agora possível, desde que preenchidos os requisitos."
+            },
+            {
+                question: "Qual o prazo mínimo e máximo de suspensão da execução da pena privativa de liberdade (sursis penal) não superior a 2 anos?",
+                options: [
+                    "1 a 2 anos.",
+                    "2 a 4 anos.",
+                    "4 a 6 anos.",
+                    "Não há prazo definido."
+                ],
+                correctAnswer: "2 a 4 anos."
+            },
+            {
+                question: "A condenação anterior a pena de multa impede a concessão do sursis penal?",
+                options: [
+                    "Sim, sempre.",
+                    "Não, o § 1º do art. 77 do CP diz que não impede.",
+                    "Apenas se a multa for de valor elevado.",
+                    "Depende da decisão do juiz sem base legal."
+                ],
+                correctAnswer: "Não, o § 1º do art. 77 do CP diz que não impede."
+            },
+            {
+                question: "Qual o tempo de cumprimento de pena exigido para concessão de livramento condicional para condenado não reincidente em crime doloso e com bons antecedentes?",
+                options: [
+                    "Mais da metade da pena.",
+                    "Mais de um terço da pena.",
+                    "Mais de dois terços da pena.",
+                    "1/6 da pena."
+                ],
+                correctAnswer: "Mais de um terço da pena."
+            },
+            {
+                question: "Se o liberado for condenado em sentença irrecorrível por crime cometido durante a vigência do benefício, o livramento condicional será:",
+                options: [
+                    "Prorrogado.",
+                    "Mantido.",
+                    "Revogado obrigatoriamente.",
+                    "Revogado facultativamente."
+                ],
+                correctAnswer: "Revogado obrigatoriamente."
+            },
+            {
+                question: "Qual o valor mínimo e máximo do dia-multa, conforme o Art. 49 do CP?",
+                options: [
+                    "1 a 10 salários mínimos.",
+                    "1/30 do maior salário mínimo a 5 vezes esse salário.",
+                    "10 a 360 dias-multa.",
+                    "Não há limites definidos."
+                ],
+                correctAnswer: "1/30 do maior salário mínimo a 5 vezes esse salário."
+            },
+            {
+                question: "Após o trânsito em julgado da sentença condenatória, a multa será executada perante qual juízo, conforme a Lei nº 13.964/2019?",
+                options: [
+                    "Vara de Execução Fiscal.",
+                    "Vara Cível.",
+                    "Juízo da execução penal.",
+                    "Qualquer juízo, a critério do Ministério Público."
+                ],
+                correctAnswer: "Juízo da execução penal."
+            },
+            {
+                question: "De acordo com o julgamento da ADI 3150/DF pelo STF, quem possui a legitimação prioritária para a execução da pena de multa?",
+                options: [
+                    "Apenas a Fazenda Pública.",
+                    "O Ministério Público.",
+                    "O juiz da Vara de Execuções Penais.",
+                    "O próprio condenado."
+                ],
+                correctAnswer: "O Ministério Público."
+            },
+            {
+                question: "O planejamento de aula e o material de apoio da disciplina estarão disponíveis em qual local, conforme informado pelo professor?",
+                options: [
+                    "Apenas na sala de aula presencial.",
+                    "No Portal Acadêmico.",
+                    "Por e-mail pessoal do professor.",
+                    "Somente via Instagram."
+                ],
+                correctAnswer: "No Portal Acadêmico."
+            },
+            {
+                question: "Qual é o principal meio de contato sugerido para o líder da turma com a professora Rafaela Alban?",
+                options: [
+                    "Mensagem de texto.",
+                    "Reunião presencial após a aula.",
+                    "Enviar um e-mail se apresentando e enviando o contato telefônico.",
+                    "Contato exclusivo pelo Portal Acadêmico."
+                ],
+                correctAnswer: "Enviar um e-mail se apresentando e enviando o contato telefônico."
+            },
+            {
+                question: "A AV3 (avaliação) da disciplina será composta por quais partes?",
+                options: [
+                    "Apenas prova escrita individual.",
+                    "SIMULADO INSTITUCIONAL (4,0) + 'CRIMINAL DEFENSE PROJECT' (6,0).",
+                    "Somente um projeto individual.",
+                    "Exposição oral em sala de aula apenas."
+                ],
+                correctAnswer: "SIMULADO INSTITUCIONAL (4,0) + 'CRIMINAL DEFENSE PROJECT' (6,0)."
+            },
+            {
+                question: "O 'CRIMINAL DEFENSE PROJECT' será realizado em equipes de quantas pessoas?",
+                options: [
+                    "3 pessoas.",
+                    "4 pessoas.",
+                    "5 pessoas.",
+                    "Equipes individuais."
+                ],
+                correctAnswer: "5 pessoas."
+            },
+            {
+                question: "Na 1ª Etapa do 'CRIMINAL DEFENSE PROJECT', o que os grupos deverão apresentar presencialmente em sala?",
+                options: [
+                    "Apenas um vídeo de defesa criminal.",
+                    "O caso escolhido e indicar a 'questão problema' que será debatida.",
+                    "Somente um relatório impresso.",
+                    "Resultados de uma pesquisa de campo."
+                ],
+                correctAnswer: "O caso escolhido e indicar a 'questão problema' que será debatida."
+            },
+            {
+                question: "Como será a 2ª Etapa do 'CRIMINAL DEFENSE PROJECT'?",
+                options: [
+                    "Exposição oral em sala de aula.",
+                    "Transmissão em sala de vídeos produzidos por cada equipe e salvos no Youtube, promovendo a defesa criminal.",
+                    "Entrega de um trabalho escrito sem apresentação.",
+                    "Realização de uma prova surpresa."
+                ],
+                correctAnswer: "Transmissão em sala de vídeos produzidos por cada equipe e salvos no Youtube, promovendo a defesa criminal."
+            },
+            {
+                question: "Qual o prazo máximo para a duração da medida de segurança, de acordo com o entendimento do Supremo Tribunal Federal (STF)?",
+                options: [
+                    "O limite máximo da pena abstratamente cominada ao delito praticado.",
+                    "Não há limite temporal, aceitando a perpetuidade da medida.",
+                    "O limite temporal de 30 (trinta) anos, por interpretação analógica do Art. 75 do CP.",
+                    "O tempo de cumprimento de pena em regime fechado."
+                ],
+                correctAnswer: "O limite temporal de 30 (trinta) anos, por interpretação analógica do Art. 75 do CP."
+            },
+            {
+                question: "O que a Súmula n. 715 do STF estabelece sobre a pena unificada para atender ao limite de trinta anos?",
+                options: [
+                    "É considerada para a concessão de livramento condicional.",
+                    "Não é considerada para a concessão de outros benefícios, como o livramento condicional ou regime mais favorável.",
+                    "Permite a execução da pena por mais de 30 anos ininterruptamente.",
+                    "Apenas se aplica a crimes hediondos."
+                ],
+                correctAnswer: "Não é considerada para a concessão de outros benefícios, como o livramento condicional ou regime mais favorável."
+            },
+            {
+                question: "Qual o princípio que estabelece que a pena deverá ser suficiente para atingir a sua finalidade, isto é, a prevenção, punição e ressocialização?",
+                options: [
+                    "Princípio da Legalidade Estrita.",
+                    "Princípio da Anterioridade.",
+                    "Princípio da Suficiência da Pena.",
+                    "Princípio da Humanidade."
+                ],
+                correctAnswer: "Princípio da Suficiência da Pena."
+            },
+            {
+                question: "Qual a teoria da Culpabilidade que considera o dolo e a culpa como parte da culpabilidade, mas a imputabilidade não?",
+                options: [
+                    "Teoria Psicológica Pura.",
+                    "Teoria Psicológico-Normativa.",
+                    "Teoria Normativa Pura.",
+                    "Teoria Absoluta."
+                ],
+                correctAnswer: "Teoria Psicológica Pura."
+            },
+            {
+                question: "O erro sobre a ilicitude do fato, se inevitável, de acordo com o Art. 21 do CP, implica em:",
+                options: [
+                    "Aumento da pena.",
+                    "Isenção de pena.",
+                    "Diminuição da pena de um sexto a um terço.",
+                    "Afastamento da culpabilidade sem isenção de pena."
+                ],
+                correctAnswer: "Isenção de pena."
+            },
+            {
+                question: "Qual a diferença entre Legalidade Formal e Legalidade Material?",
+                options: [
+                    "Legalidade Formal refere-se à criação de tipos penais, enquanto Legalidade Material à sua aplicação.",
+                    "Legalidade Formal é a observância do procedimento legislativo; Legalidade Material são normas substanciais que limitam o poder legislativo.",
+                    "Legalidade Formal permite a criação de leis vagas; Legalidade Material exige leis taxativas.",
+                    "Não há diferença entre elas."
+                ],
+                correctAnswer: "Legalidade Formal é a observância do procedimento legislativo; Legalidade Material são normas substanciais que limitam o poder legislativo."
+            },
+            {
+                question: "O Princípio da Alternatividade aplica-se em crimes:",
+                options: [
+                    "Com um único núcleo de conduta.",
+                    "Plurinucleares, onde o tipo incriminador prevê mais de uma conduta, sendo punido por uma única modalidade criminosa.",
+                    "Com tipo misto cumulativo.",
+                    "Que configuram delito diverso."
+                ],
+                correctAnswer: "Plurinucleares, onde o tipo incriminador prevê mais de uma conduta, sendo punido por uma única modalidade criminosa."
+            },
+            {
+                question: "O Princípio da Personalidade ou da Intranscendência da Pena significa que:",
+                options: [
+                    "A pena pode passar da pessoa do condenado para seus herdeiros.",
+                    "Nenhuma pena poderá passar da pessoa do condenado.",
+                    "A obrigação de reparar o dano não pode ser estendida aos sucessores.",
+                    "A pena de multa será cobrada dos herdeiros."
+                ],
+                correctAnswer: "Nenhuma pena poderá passar da pessoa do condenado."
+            },
+            {
+                question: "A Súmula 440 do STJ estabelece que, fixada a pena-base no mínimo legal, é vedado o estabelecimento de regime prisional mais gravoso com base apenas em:",
+                options: [
+                    "Reincidência do réu.",
+                    "Circunstâncias judiciais favoráveis.",
+                    "Gravidade abstrata do delito.",
+                    "Comportamento da vítima."
+                ],
+                correctAnswer: "Gravidade abstrata do delito."
+            },
+            {
+                question: "Qual das seguintes prisões é considerada provisória para fins de detração?",
+                options: [
+                    "Prisão após trânsito em julgado.",
+                    "Prisão em flagrante.",
+                    "Prisão decorrente de condenação definitiva.",
+                    "Prisão para cumprimento de pena restritiva de direitos."
+                ],
+                correctAnswer: "Prisão em flagrante."
+            },
+            {
+                question: "O tempo de prisão provisória, de prisão administrativa ou de internação será computado para fins de determinação de qual regime?",
+                options: [
+                    "Apenas do regime semiaberto.",
+                    "Apenas do regime fechado.",
+                    "Do regime inicial de pena privativa de liberdade.",
+                    "Não é computado para nenhum regime."
+                ],
+                correctAnswer: "Do regime inicial de pena privativa de liberdade."
+            },
+            {
+                question: "A Súmula Vinculante 26 do STF, em parte superada, tratava da inconstitucionalidade de qual obrigatoriedade para crimes hediondos?",
+                options: [
+                    "Regime inicial semiaberto.",
+                    "Regime inicial aberto.",
+                    "Regime inicial fechado.",
+                    "Obrigatoriedade de livramento condicional."
+                ],
+                correctAnswer: "Regime inicial fechado."
+            },
+            {
+                question: "Qual o percentual de cumprimento de pena para progressão de regime de apenado primário em crime cometido com violência ou grave ameaça?",
+                options: [
+                    "16%",
+                    "20%",
+                    "25%",
+                    "30%"
+                ],
+                correctAnswer: "25%"
+            },
+            {
+                question: "O que a Súmula 439 do STJ afirma sobre a fixação de pena substitutiva como condição especial ao regime aberto?",
+                options: [
+                    "É admissível.",
+                    "É inadmissível.",
+                    "É obrigatória.",
+                    "Depende do tipo de crime."
+                ],
+                correctAnswer: "É inadmissível."
+            },
+            {
+                question: "A progressão de regime de cumprimento de pena para condenado por crime contra a administração pública é condicionada a que, segundo o CP?",
+                options: [
+                    "Apenas ao bom comportamento carcerário.",
+                    "Reparação do dano ou devolução do produto do ilícito.",
+                    "Estudo em estabelecimento prisional.",
+                    "Assinatura de termo de colaboração premiada."
+                ],
+                correctAnswer: "Reparação do dano ou devolução do produto do ilícito."
+            },
+            {
+                question: "Qual o percentual de aumento de pena por crime continuado para a prática de duas infrações, segundo a Súmula 659 do STJ?",
+                options: [
+                    "1/5.",
+                    "1/4.",
+                    "1/6.",
+                    "1/3."
+                ],
+                correctAnswer: "1/6."
+            },
+            {
+                question: "Se a colaboração premiada for posterior à sentença, a pena poderá ser reduzida em até:",
+                options: [
+                    "1/3 (um terço).",
+                    "A metade.",
+                    "2/3 (dois terços).",
+                    "Integralmente."
+                ],
+                correctAnswer: "A metade."
+            },
+            {
+                question: "Qual Súmula do STF afirma que 'Não impede a progressão de regime de execução da pena, fixada em sentença não transitada em julgado, o fato de o réu se encontrar em prisão especial'?",
+                options: [
+                    "Súmula Vinculante 56.",
+                    "Súmula 717.",
+                    "Súmula 716.",
+                    "Súmula 491."
+                ],
+                correctAnswer: "Súmula 717."
+            },
+            {
+                question: "A Súmula 491 do STJ considera inadmissível a qual tipo de progressão de regime prisional?",
+                options: [
+                    "Progressão por salto (per saltum).",
+                    "Progressão contínua.",
+                    "Progressão por estudo.",
+                    "Progressão por trabalho."
+                ],
+                correctAnswer: "Progressão por salto (per saltum)."
+            },
+            {
+                question: "Para a mulher gestante ou que for mãe/responsável por crianças ou pessoas com deficiência, um dos requisitos para progressão de regime é não ter cometido crime com:",
+                options: [
+                    "Qualquer tipo de violência.",
+                    "Violência ou grave ameaça a pessoa.",
+                    "Apenas crime culposo.",
+                    "Apenas crime contra o patrimônio."
+                ],
+                correctAnswer: "Violência ou grave ameaça a pessoa."
+            },
+            {
+                question: "O Plenário do STF entendeu que o chamado TRÁFICO PRIVILEGIADO (Art. 33, § 4º, da Lei 11.343/2006) deve ser considerado crime de natureza hedionda?",
+                options: [
+                    "Sim, sempre.",
+                    "Não, não deve ser considerado crime de natureza hedionda.",
+                    "Apenas se houver reincidência.",
+                    "Apenas se houver resultado morte."
+                ],
+                correctAnswer: "Não, não deve ser considerado crime de natureza hedionda."
+            },
+            {
+                question: "Os condenados que cumprem pena em regime fechado ou semiaberto e os presos provisórios poderão obter permissão para sair do estabelecimento, mediante escolta, em quais situações?",
+                options: [
+                    "Apenas para visitas familiares.",
+                    "Falecimento ou doença grave de cônjuge, companheira, ascendente, descendente ou irmão; ou necessidade de tratamento médico.",
+                    "Para trabalhar externamente sem vigilância.",
+                    "Para frequentar curso superior sem acompanhamento."
+                ],
+                correctAnswer: "Falecimento ou doença grave de cônjuge, companheira, ascendente, descendente ou irmão; ou necessidade de tratamento médico."
+            },
+            {
+                question: "Os condenados que cumprem pena em regime semiaberto poderão obter autorização para saída temporária do estabelecimento, sem vigilância direta, nos seguintes casos, exceto:",
+                options: [
+                    "Frequência a curso supletivo profissionalizante.",
+                    "Frequência a curso de instrução do 2º grau ou superior.",
+                    "Visitas familiares (item revogado pela Lei nº 14.843, de 2024).",
+                    "Participação em atividades discentes."
+                ],
+                correctAnswer: "Visitas familiares (item revogado pela Lei nº 14.843, de 2024)."
+            },
+            {
+                question: "O benefício da saída temporária será automaticamente revogado quando o condenado, entre outras situações, praticar fato definido como:",
+                options: [
+                    "Crime culposo.",
+                    "Crime doloso.",
+                    "Infração leve.",
+                    "Contravenção penal sem pena privativa de liberdade."
+                ],
+                correctAnswer: "Crime doloso."
+            },
+            {
+                question: "Qual o regime de cumprimento de pena para contravenções penais?",
+                options: [
+                    "Reclusão.",
+                    "Detenção.",
+                    "Prisão simples.",
+                    "Multa apenas."
+                ],
+                correctAnswer: "Prisão simples."
+            },
+            {
+                question: "As penas restritivas de direitos convertem-se em privativas de liberdade quando ocorre o descumprimento:",
+                options: [
+                    "Com justificativa.",
+                    "Injustificado da restrição imposta.",
+                    "Parcial da restrição.",
+                    "Após o término da pena."
+                ],
+                correctAnswer: "Injustificado da restrição imposta."
+            },
+            {
+                question: "Para o condenado a pena privativa de liberdade igual ou inferior a um ano, a substituição da pena pode ser feita por:",
+                options: [
+                    "Apenas multa.",
+                    "Apenas uma pena restritiva de direito.",
+                    "Multa ou uma pena restritiva de direito.",
+                    "Duas penas restritivas de direito."
+                ],
+                correctAnswer: "Multa ou uma pena restritiva de direito."
+            },
+            {
+                question: "Em caso de condenação igual ou inferior a um ano, a substituição da pena privativa de liberdade pode ser feita por multa ou por uma pena restritiva de direitos. Se superior a um ano (até 4 anos), a substituição pode ser feita por:",
+                options: [
+                    "Apenas multa.",
+                    "Apenas uma pena restritiva de direitos.",
+                    "Uma pena restritiva de direito e multa ou por duas restritivas de direito.",
+                    "Apenas duas penas restritivas de direito."
+                ],
+                correctAnswer: "Uma pena restritiva de direito e multa ou por duas restritivas de direito."
+            },
+            {
+                question: "Nos termos do Art. 312-A do CTB, nas situações em que o juiz aplicar a substituição de pena privativa de liberdade por pena restritiva de direitos para crimes de trânsito, esta deverá ser de:",
+                options: [
+                    "Prestação pecuniária.",
+                    "Perda de bens e valores.",
+                    "Prestação de serviço à comunidade ou a entidades públicas, em atividades específicas relacionadas ao trânsito.",
+                    "Limitação de fim de semana em casa de albergado."
+                ],
+                correctAnswer: "Prestação de serviço à comunidade ou a entidades públicas, em atividades específicas relacionadas ao trânsito."
+            },
+            {
+                question: "Qual o percentual de cumprimento de pena para livramento condicional nos casos de condenação por crime hediondo, prática de tortura, tráfico ilícito de entorpecentes e drogas afins, tráfico de pessoas e terrorismo, se o apenado não for reincidente específico?",
+                options: [
+                    "Mais de um terço da pena.",
+                    "Mais da metade da pena.",
+                    "Mais de dois terços da pena.",
+                    "1/6 da pena."
+                ],
+                correctAnswer: "Mais de dois terços da pena."
+            },
+            {
+                question: "Qual a condição para o livramento condicional ser novamente concedido, se já tiver sido revogado?",
+                options: [
+                    "Pode ser novamente concedido em qualquer caso.",
+                    "Não poderá ser novamente concedido.",
+                    "Apenas se a revogação for facultativa.",
+                    "Apenas se o juiz autorizar sem motivo."
+                ],
+                correctAnswer: "Não poderá ser novamente concedido."
+            },
+            {
+                question: "Quando se considera extinta a pena privativa de liberdade, em relação ao livramento condicional?",
+                options: [
+                    "Assim que o benefício é concedido.",
+                    "Quando o juiz não declara a extinção da pena.",
+                    "Se até o seu término o livramento não é revogado.",
+                    "Após a revogação do livramento."
+                ],
+                correctAnswer: "Se até o seu término o livramento não é revogado."
+            },
+            {
+                question: "Em que situação o crime de peculato culposo tem a punibilidade extinta?",
+                options: [
+                    "Apenas se o crime for de menor potencial ofensivo.",
+                    "Se a reparação dos danos ocorrer antes da sentença irrecorrível.",
+                    "Se o agente for inimputável.",
+                    "Se o valor for insignificante."
+                ],
+                correctAnswer: "Se a reparação dos danos ocorrer antes da sentença irrecorrível."
+            },
+            {
+                question: "No homicídio culposo, o juiz poderá deixar de aplicar a pena se as consequências da infração atingirem o próprio agente de forma tão grave que a sanção penal se torne desnecessária. Esta é uma aplicação de qual princípio?",
+                options: [
+                    "Princípio da Legalidade.",
+                    "Princípio da Insignificância Própria.",
+                    "Princípio da Irrelevância Penal do Fato (Bagatela Imprópria).",
+                    "Princípio da Proporcionalidade."
+                ],
+                correctAnswer: "Princípio da Irrelevância Penal do Fato (Bagatela Imprópria)."
+            },
+            {
+                question: "De acordo com o Art. 387 do CPP, o juiz, ao proferir sentença condenatória, fixará valor mínimo para reparação de quais elementos?",
+                options: [
+                    "Apenas os danos morais.",
+                    "Apenas os prejuízos sofridos pelo ofendido.",
+                    "Apenas o custo do processo.",
+                    "Apenas os danos materiais."
+                ],
+                correctAnswer: "Apenas os prejuízos sofridos pelo ofendido."
+            },
+            {
+                question: "Qual o percentual de cumprimento de pena para progressão de regime de apenado que exerce o COMANDO de ORGANIZAÇÃO CRIMINOSA estruturada para a prática de crime hediondo ou equiparado?",
+                options: [
+                    "40%",
+                    "50%",
+                    "60%",
+                    "70%"
+                ],
+                correctAnswer: "50%"
+            },
+            {
+                question: "Qual o percentual de cumprimento de pena para progressão de regime para o crime de constituição de MILÍCIA PRIVADA?",
+                options: [
+                    "40%",
+                    "50%",
+                    "60%",
+                    "70%"
+                ],
+                correctAnswer: "50%"
+            },
+            {
+                question: "O cometimento de novo crime doloso ou falta grave durante a execução da pena privativa de liberdade implica em que para a progressão de regime?",
+                options: [
+                    "Acelera o prazo.",
+                    "Não tem impacto.",
+                    "Interrompe o prazo, com reinício da contagem do requisito objetivo com base na pena remanescente.",
+                    "Apenas altera o regime para o aberto."
+                ],
+                correctAnswer: "Interrompe o prazo, com reinício da contagem do requisito objetivo com base na pena remanescente."
+            },
+            {
+                question: "O bom comportamento é readquirido após quanto tempo da ocorrência da falta grave, ou antes, após o cumprimento do requisito temporal exigível para a obtenção do direito?",
+                options: [
+                    "6 meses.",
+                    "1 ano.",
+                    "2 anos.",
+                    "Não pode ser readquirido."
+                ],
+                correctAnswer: "1 ano."
+            },
+            {
+                question: "A Súmula 661 do STJ estabelece que a falta grave por posse de aparelho celular ou componentes essenciais:",
+                options: [
+                    "Prescinde da perícia do celular apreendido.",
+                    "Exige a perícia do celular apreendido.",
+                    "Não constitui falta grave.",
+                    "Permite a utilização em alguns casos."
+                ],
+                correctAnswer: "Prescinde da perícia do celular apreendido."
+            },
+            {
+                question: "A Súmula 662 do STJ diz que para a prorrogação do prazo de permanência no sistema penitenciário federal, é prescindível a ocorrência de fato novo. Basta que conste em decisão fundamentada:",
+                options: [
+                    "Apenas a gravidade do crime inicial.",
+                    "A persistência dos motivos que ensejaram a transferência inicial do preso.",
+                    "A boa conduta do preso.",
+                    "O tempo de cumprimento da pena."
+                ],
+                correctAnswer: "A persistência dos motivos que ensejaram a transferência inicial do preso."
+            },
+            {
+                question: "Quais dos seguintes crimes são inafiançáveis e insuscetíveis de sursis, graça, indulto, anistia e liberdade provisória, segundo a Lei de Drogas (com ressalva da inconstitucionalidade da vedação à conversão)?",
+                options: [
+                    "Apenas furto simples.",
+                    "Crimes previstos nos arts. 33, caput e § 1°, e 34 a 37 da Lei 11.343/06.",
+                    "Apenas crimes culposos.",
+                    "Crimes contra a honra."
+                ],
+                correctAnswer: "Crimes previstos nos arts. 33, caput e § 1°, e 34 a 37 da Lei 11.343/06."
+            },
+            {
+                question: "Qual o direito do réu que preenche os requisitos para a Suspensão Condicional da Pena (Sursis Penal)?",
+                options: [
+                    "Não é um direito, é uma faculdade do juiz.",
+                    "É um direito do réu.",
+                    "Depende exclusivamente da vontade do Ministério Público.",
+                    "Só é concedido para crimes hediondos."
+                ],
+                correctAnswer: "É um direito do réu."
+            },
+            {
+                question: "Para a concessão do sursis penal, o condenado pode ser reincidente em crime culposo?",
+                options: [
+                    "Não, nunca.",
+                    "Sim, a reincidência em crime culposo não impede a concessão.",
+                    "Apenas se a pena for inferior a 1 ano.",
+                    "Apenas se o juiz autorizar."
+                ],
+                correctAnswer: "Sim, a reincidência em crime culposo não impede a concessão."
+            },
+            {
+                question: "No Sursis Simples (Art. 78, § 1º, CP), qual a condição que o condenado deve cumprir no primeiro ano do prazo?",
+                options: [
+                    "Proibição de frequentar determinados lugares.",
+                    "Prestação de serviços à comunidade ou submeter-se à limitação de fim de semana.",
+                    "Proibição de ausentar-se da comarca.",
+                    "Comparecimento mensal ao juízo sem justificar atividades."
+                ],
+                correctAnswer: "Prestação de serviços à comunidade ou submeter-se à limitação de fim de semana."
+            },
+            {
+                question: "Se o beneficiário do sursis for processado por outro crime ou contravenção, o prazo da suspensão será:",
+                options: [
+                    "Imediatamente revogado.",
+                    "Extinto.",
+                    "Prorrogado até o julgamento definitivo.",
+                    "Convertido em pena privativa de liberdade."
+                ],
+                correctAnswer: "Prorrogado até o julgamento definitivo."
+            },
+            {
+                question: "Qual o requisito de cumprimento de pena para concessão de livramento condicional em caso de reincidência em crime doloso?",
+                options: [
+                    "Mais de um terço da pena.",
+                    "Mais da metade da pena.",
+                    "Mais de dois terços da pena.",
+                    "16% da pena."
+                ],
+                correctAnswer: "Mais da metade da pena."
+            },
+            {
+                question: "Para o livramento condicional, a reparação do dano causado pela infração é um requisito, salvo:",
+                options: [
+                    "Se o valor for baixo.",
+                    "Efetiva impossibilidade de fazê-lo.",
+                    "Se o crime não for doloso.",
+                    "Após o trânsito em julgado."
+                ],
+                correctAnswer: "Efetiva impossibilidade de fazê-lo."
+            },
+            {
+                question: "O que acontece com o tempo em que o condenado esteve solto, se o livramento condicional for revogado por crime anterior ao benefício?",
+                options: [
+                    "É descontado na pena.",
+                    "Não é descontado na pena.",
+                    "É somado à nova pena.",
+                    "Resulta na extinção da pena."
+                ],
+                correctAnswer: "É descontado na pena."
+            },
+            {
+                question: "A pena de multa, conforme o Art. 49 do CP, consiste no pagamento de qual quantia?",
+                options: [
+                    "Valor fixo determinado pelo juiz.",
+                    "Quantia fixada na sentença e calculada em dias-multa.",
+                    "Qualquer valor que o condenado possa pagar.",
+                    "Valor correspondente ao prejuízo da vítima."
+                ],
+                correctAnswer: "Quantia fixada na sentença e calculada em dias-multa."
+            },
+            {
+                question: "Qual a duração mínima e máxima da pena de multa em dias-multa?",
+                options: [
+                    "1 a 10 dias-multa.",
+                    "10 a 360 dias-multa.",
+                    "30 a 180 dias-multa.",
+                    "Não há limite."
+                ],
+                correctAnswer: "10 a 360 dias-multa."
+            },
+            {
+                question: "O valor do dia-multa não pode ser inferior a qual fração do maior salário mínimo mensal vigente ao tempo do fato?",
+                options: [
+                    "Um décimo.",
+                    "Um trigésimo.",
+                    "Um centésimo.",
+                    "Um quinto."
+                ],
+                correctAnswer: "Um trigésimo."
+            },
+            {
+                question: "A cobrança da multa pode efetuar-se mediante desconto no vencimento ou salário do condenado quando:",
+                options: [
+                    "Apenas se a multa for aplicada isoladamente.",
+                    "Aplicada isoladamente, cumulativamente com pena restritiva de direitos, ou concedida a suspensão condicional da pena.",
+                    "Apenas se o condenado não tiver bens.",
+                    "Em qualquer caso, sem restrições."
+                ],
+                correctAnswer: "Aplicada isoladamente, cumulativamente com pena restritiva de direitos, ou concedida a suspensão condicional da pena."
+            },
+            {
+                question: "A execução da pena de multa é suspensa se sobrevém ao condenado qual condição?",
+                options: [
+                    "Doença física grave.",
+                    "Doença mental.",
+                    "Mudança de regime prisional.",
+                    "Perda do emprego."
+                ],
+                correctAnswer: "Doença mental."
+            },
+            {
+                question: "De acordo com o STF (ADI 3150/DF), quem possui a legitimação prioritária para a execução da pena de multa?",
+                options: [
+                    "O juiz da execução penal.",
+                    "A Fazenda Pública.",
+                    "O Ministério Público.",
+                    "O próprio condenado."
+                ],
+                correctAnswer: "O Ministério Público."
+            },
+            {
+                question: "Com a alteração do Art. 51 do Código Penal pela Lei nº 13.964/2019, não há mais espaço para debate sobre qual juízo competente para a execução da multa, devendo ser executada perante:",
+                options: [
+                    "A Vara de Execução Fiscal.",
+                    "A Vara Cível.",
+                    "A Vara de Execução Penal.",
+                    "A Justiça Federal."
+                ],
+                correctAnswer: "A Vara de Execução Penal."
+            },
+            {
+                question: "O tempo de prisão provisória, de prisão administrativa ou de internação, no Brasil ou no estrangeiro, será computado para fins de determinação do regime inicial de pena privativa de liberdade. Este é um princípio conhecido como:",
+                options: [
+                    "Remição da Pena.",
+                    "Anistia.",
+                    "Detração Penal.",
+                    "Graça."
+                ],
+                correctAnswer: "Detração Penal."
+            },
+            {
+                question: "Conforme o Art. 5º da CF, ninguém será submetido a tortura nem a tratamento:",
+                options: [
+                    "Apenas desumano.",
+                    "Apenas degradante.",
+                    "Desumano ou degradante.",
+                    "Exclusivamente vexatório."
+                ],
+                correctAnswer: "Desumano ou degradante."
+            },
+            {
+                question: "O conceito analítico de crime, segundo o material, é Fato Típico + antijurídico + culpável. Qual o elemento que recai sobre o autor do fato e não sobre o fato em si?",
+                options: [
+                    "Tipicidade.",
+                    "Ilicitude.",
+                    "Culpabilidade.",
+                    "Antijuridicidade."
+                ],
+                correctAnswer: "Culpabilidade."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let score = 0; // Número de acertos
+        let incorrectAnswers = 0; // Número de erros
+
+        // Elementos do DOM
+        const quizContainer = document.getElementById('quiz-container');
+        const resultScreen = document.getElementById('result-screen');
+        const questionIndicator = document.getElementById('question-indicator');
+        const questionText = document.getElementById('question-text');
+        const optionsForm = document.getElementById('options-form');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const feedbackDiv = document.getElementById('feedback');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const restartButton = document.getElementById('restart-button');
+
+        // Função para inicializar o Firebase
+        async function initializeFirebase() {
+            try {
+                if (Object.keys(firebaseConfig).length > 0) {
+                    app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+
+                    // Autenticação
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    userId = auth.currentUser ? auth.currentUser.uid : crypto.randomUUID();
+                    console.log("Firebase inicializado. User ID:", userId);
+                    // Opcional: Salvar o userId se for um usuário anônimo gerado
+                    // if (!auth.currentUser || !auth.currentUser.uid) {
+                    //     // Poderíamos salvar este userId gerado localmente ou em Firestore se fosse persistente
+                    // }
+                } else {
+                    console.warn("Firebase config não fornecida. O aplicativo funcionará sem persistência de dados.");
+                }
+            } catch (error) {
+                console.error("Erro ao inicializar Firebase ou autenticar:", error);
+            }
+        }
+
+        // Função para carregar uma questão
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionText.textContent = currentQuestion.question;
+            optionsForm.innerHTML = '';
+            feedbackDiv.classList.add('hidden'); // Esconde o feedback anterior
+
+            currentQuestion.options.forEach((option, index) => {
+                const label = document.createElement('label');
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'answer';
+                radio.value = option;
+                radio.checked = (userAnswers[currentQuestionIndex] === option); // Marca a opção se já foi selecionada
+                radio.onclick = () => saveAnswer(option); // Salva a resposta ao clicar
+
+                const span = document.createElement('span');
+                span.textContent = option;
+
+                label.appendChild(radio);
+                label.appendChild(span);
+                optionsForm.appendChild(label);
+            });
+
+            updateNavigationButtons();
+            updateQuestionIndicators();
+            displayFeedback(currentQuestionIndex); // Mostra o feedback se já respondeu
+        }
+
+        // Função para salvar a resposta do usuário
+        function saveAnswer(answer) {
+            userAnswers[currentQuestionIndex] = answer;
+            displayFeedback(currentQuestionIndex);
+        }
+
+        // Função para exibir o feedback (correto/incorreto)
+        function displayFeedback(qIndex) {
+            const selectedAnswer = userAnswers[qIndex];
+            const currentQuestion = questions[qIndex];
+
+            feedbackDiv.classList.remove('correct', 'incorrect');
+            if (selectedAnswer !== null) {
+                feedbackDiv.classList.remove('hidden');
+                if (selectedAnswer === currentQuestion.correctAnswer) {
+                    feedbackDiv.classList.add('correct');
+                    feedbackDiv.textContent = 'Correto!';
+                } else {
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.textContent = `Incorreto. A resposta correta era: ${currentQuestion.correctAnswer}`;
+                }
+            } else {
+                feedbackDiv.classList.add('hidden');
+            }
+        }
+
+        // Função para atualizar os botões de navegação
+        function updateNavigationButtons() {
+            prevButton.disabled = currentQuestionIndex === 0;
+            nextButton.textContent = currentQuestionIndex === questions.length - 1 ? 'Finalizar Simulado' : 'Próxima';
+        }
+
+        // Função para atualizar os indicadores de questão
+        function updateQuestionIndicators() {
+            questionIndicator.textContent = `Questão ${currentQuestionIndex + 1} de ${questions.length}`;
+        }
+
+        // Função para avançar para a próxima questão
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // Função para retornar à questão anterior
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        // Função para finalizar o simulado e mostrar o resultado
+        function finishQuiz() {
+            score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].correctAnswer) {
+                    score++;
+                }
+            });
+            incorrectAnswers = questions.length - score; // Calcula o número de erros
+
+            quizContainer.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            finalScoreDisplay.textContent = `Você acertou ${score} questões e errou ${incorrectAnswers} de ${questions.length} no total!`;
+
+            // Opcional: Salvar o resultado no Firestore
+            saveQuizResult(score);
+        }
+
+        // Função para salvar o resultado no Firestore (opcional)
+        async function saveQuizResult(finalScore) {
+            if (!db || !userId) {
+                console.warn("Firebase ou userId não disponíveis, não é possível salvar o resultado.");
+                return;
+            }
+            try {
+                // Usando uma subcoleção privada para o usuário
+                const userQuizRef = doc(db, `artifacts/${appId}/users/${userId}/quiz_results`, new Date().toISOString());
+                await setDoc(userQuizRef, {
+                    score: finalScore,
+                    totalQuestions: questions.length,
+                    timestamp: new Date()
+                });
+                console.log("Resultado do quiz salvo com sucesso!");
+            } catch (error) {
+                console.error("Erro ao salvar o resultado do quiz:", error);
+            }
+        }
+
+        // Função para reiniciar o simulado
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers.fill(null);
+            score = 0;
+            incorrectAnswers = 0; // Reinicia a contagem de erros
+            quizContainer.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            loadQuestion();
+        }
+
+        // Event Listeners
+        nextButton.addEventListener('click', nextQuestion);
+        prevButton.addEventListener('click', prevQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Inicialização do simulado
+        window.onload = async () => {
+            await initializeFirebase();
+            loadQuestion();
+        };
+
+    </script>
+</body>
+</html>
